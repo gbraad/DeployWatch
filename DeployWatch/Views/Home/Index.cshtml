@@ -1,7 +1,9 @@
 ﻿<script id="siteTemplate" type="text/x-jquery-tmpl">
     <div>
         <h2>${url}</h2>
-        ${status}
+        {%each(prop, val) headers%}
+          <li><span>${val.Key}</span>: <span>${val.Value}</span></li>
+        {%/each%}
     </div>
 </script>
 

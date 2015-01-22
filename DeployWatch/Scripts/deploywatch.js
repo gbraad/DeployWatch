@@ -1,6 +1,6 @@
 ﻿var sites = ["google.com", "baidu.com"];
 
-$.each(sites, function(index, value) {
+$.map(sites, function(value) {
     $.get("/site/" + value, function (data) {
         $("#siteTemplate").tmpl(data).appendTo("#sites");
     });

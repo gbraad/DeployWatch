@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -8,8 +9,6 @@ namespace DeployWatch.Controllers.API
 {
     public class SiteController : ApiController
     {
-        //private readonly HttpClient httpClient;
-
         public SiteController()
         {
         }
@@ -17,12 +16,31 @@ namespace DeployWatch.Controllers.API
         [Route("site/{site}/")]
         public HttpResponseMessage Get(string site)
         {
-            var response = new
+
+            HttpClient httpsClient = new HttpClient();
+            httpsClient.BaseAddress = new Uri(String.Format("https://{0}", site));
+
+            try
             {
-                url = site,
-                status = "OK"
-            };
-            return Request.CreateResponse(HttpStatusCode.OK, response);
+                var result = httpsClient.GetAsync("/").Result;
+
+                var response = new
+                {
+                    url = site,
+                    headers = result.Headers,
+                    status = "OK"
+                };
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception e)
+            {
+                var response = new
+                {
+                    url = site,
+                    status = "FAIL"
+                };
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, response);
+            }
         }
     }
 }
