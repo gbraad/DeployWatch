@@ -1,10 +1,13 @@
 ﻿<script id="siteTemplate" type="text/x-jquery-tmpl">
     <div>
         <h2>${url}</h2>
+
         {%each(prop, val) headers%}
-          <li><span>${val.Key}</span>: <span>${val.Value}</span></li>
+        <li><span>${val.Key}</span>: <span>${val.Value}</span></li>
         {%/each%}
-    </div>
+
+        <li><span>Certificate expiration</span>: <span>${certificate.expiration}</span></li>
+</div>
 </script>
 
 <div id="sites">

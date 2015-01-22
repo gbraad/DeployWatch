@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Security;
 using System.Web.Http;
+
+
 
 namespace DeployWatch.Controllers.API
 {
@@ -16,20 +19,23 @@ namespace DeployWatch.Controllers.API
         [Route("site/{site}/")]
         public HttpResponseMessage Get(string site)
         {
-
-            HttpClient httpsClient = new HttpClient();
-            httpsClient.BaseAddress = new Uri(String.Format("https://{0}", site));
-
             try
             {
-                var result = httpsClient.GetAsync("/").Result;
+                var client = new RequestClient(site);
+                var result = client.GetResult();
 
                 var response = new
                 {
                     url = site,
                     headers = result.Headers,
+                    certificate = new
+                    {
+                        expiration = client.CertificateExpiration
+                    },
                     status = "OK"
                 };
+                
+
                 return Request.CreateResponse(HttpStatusCode.OK, response);
             }
             catch (Exception e)
